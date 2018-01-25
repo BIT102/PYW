@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace = "org.zerock.mapper.BoardMapper">
+  	
+  	<!-- create -->
+  	<insert id = "createBoard">   <!-- 원래는 org.zerock.mapper.BoardMapper.createBoard -->
+  	insert into tbl_board ( title,
+  							content,
+  							writer )
+  												
+				values ( #{title},
+						 #{content},
+						 #{writer} )
+  	</insert>
+  	
+  	<!-- read -->
+  	<select id = "readBoard" resultType="BoardVO">
+  	select * from tbl_board where bno = #{bno};
+  	</select>
+  	
+  	<!-- readAll -->
+  	<select id = "listAll" resultType="BoardVO">
+  	<!-- [CDATA[ ... ]]는 안에 들어가는 텍스트가 파싱되지 않게 하는 기능 -->
+  	<![CDATA[   
+  		select * from tbl_board where bno > 0 order by bno desc, regdate desc 
+  	]]>
+  	</select>
+  	
+  	<update id = "updateBoard">
+  	update tbl_board set title = #{title}, content = #{content} where bno = #{bno}
+  	</update>
+  	
+  	<delete id = "deleteBoard">
+  	delete from tbl_board where bno = #{bno}
+  	</delete>
+  	
+  	<!-- 페이징 -->
+  	<select id = "listPage" resultType="BoardVO">
+  		<![CDATA[
+  			select * from tbl_board 
+  				where bno>0 
+  				order by bno desc, 
+  				regdate desc 
+  				limit #{page},10
+  		]]>
+  	</select>
+  	
+  	<select id = "listCriteria" resultType="BoardVO">
+  		<![CDATA[
+  			select * from tbl_board 
+  				where bno>0 
+  				order by bno desc, 
+  				regdate desc 
+  				limit #{pageStart}, #{perPageNum}
+  		]]>
+  		
+  	</select>
+  	
+  	<select id = "countPaging" resultType = "int">
+  		<![CDATA[
+  			select 
+  			count(bno)
+  			from tbl_board
+  			where bno>0
+  		]]>
+  		
+  	</select>
+  	
+  </mapper>
